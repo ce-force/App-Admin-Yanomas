@@ -7,6 +7,7 @@ import InformationScreen from "../screens/InformationManagementScreen";
 import MapManagementScreen from "../screens/MapManagementScreen";
 import UserManagementScreen from "../screens/UserManagementScreen";
 import CrimeReportScreen from "../screens/CrimeReportScreen";
+import SettingsScreen from "../screens/SettingsScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -29,6 +30,8 @@ const TabNavigator = () => {
                         iconName = focused ? "fire" : "fire";
                     } else if (route.name === "InformationManagementScreen") {
                         iconName = focused ? "information-variant" : "information-variant";
+                    } else if (route.name === "SettingsScreen") {
+                        iconName = focused ? "settings" : "settings";
                     }
 
                     // You can return any component that you like here!
@@ -44,6 +47,7 @@ const TabNavigator = () => {
             <Tab.Screen name="MapManagementScreen" component={MapManagementScreen} />
             <Tab.Screen name="CrimeReportScreen" component={CrimeReportScreen} />
             <Tab.Screen name="InformationManagementScreen" component={InformationScreen} />
+            <Tab.Screen name="SettingsScreen" component={SettingsScreen} />
         </Tab.Navigator>
     );
 };
