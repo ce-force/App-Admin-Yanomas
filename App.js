@@ -13,6 +13,7 @@ import InformationManagementScreen from "./src/screens/InformationManagementScre
 import CrimeReportScreen from "./src/screens/CrimeReportScreen";
 import MapManagementScreen from "./src/screens/MapManagementScreen";
 import UserManagementScreen from "./src/screens/UserManagementScreen";
+import AlertsList from './src/screens/utils/AlertsList';
 
 import * as firebase from "firebase";
 import { firebaseConfig } from "./src/config/FirebaseConfig";
@@ -53,6 +54,11 @@ const App = () => {
           <Stack.Screen
               name="UserManagementScreen"
               component={UserManagementScreen}
+              options={{ headerShown: true }}
+          />
+          <Stack.Screen
+              name="AlertsList"
+              component={AlertsList}
               options={{ headerShown: true }}
           />
           <Stack.Screen name="TabNavigator" component={TabNavigator} />
