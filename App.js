@@ -1,21 +1,64 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React from "react";
 
-export default function App() {
+// Navigation
+import { NavigationContainer } from "@react-navigation/native";
+import {
+  createStackNavigator
+} from "@react-navigation/stack";
+
+// Screens
+import RegisterScreen from "./src/screens/auth/RegisterScreen";
+import LoginScreen from "./src/screens/auth/LoginScreen";
+import InformationManagementScreen from "./src/screens/InformationManagementScreen";
+import CrimeReportScreen from "./src/screens/CrimeReportScreen";
+import MapManagementScreen from "./src/screens/MapManagementScreen";
+import UserManagementScreen from "./src/screens/UserManagementScreen";
+
+import * as firebase from "firebase";
+import { firebaseConfig } from "./src/config/FirebaseConfig";
+import TabNavigator from "./src/components/TabNavigator";
+
+const Stack = createStackNavigator();
+
+
+const App = () => {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+      <NavigationContainer>
+        <Stack.Navigator
+            mode="card"
+            initialRouteName="TabNavigator"
+            screenOptions={{ headerShown: false }}
+        >
+          <Stack.Screen name="LoginScreen" component={LoginScreen} />
+          <Stack.Screen
+              name="RegisterScreen"
+              component={RegisterScreen}
+              screenOptions={{ headerShown: true }}
+          />
+          <Stack.Screen
+              name="InformationManagementScreen"
+              component={InformationManagementScreen}
+              options={{ headerShown: true }}
+          />
+          <Stack.Screen
+              name="CrimeReportScreen"
+              component={CrimeReportScreen}
+              options={{ headerShown: true }}
+          />
+          <Stack.Screen
+              name="MapManagementScreen"
+              component={MapManagementScreen}
+              options={{ headerShown: true }}
+          />
+          <Stack.Screen
+              name="UserManagementScreen"
+              component={UserManagementScreen}
+              options={{ headerShown: true }}
+          />
+          <Stack.Screen name="TabNavigator" component={TabNavigator} />
+        </Stack.Navigator>
+      </NavigationContainer>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
