@@ -11,6 +11,10 @@ function CrimeReportScreen() {
     let [category, setCategory] = useState("");
     let [description, setDescription] = useState("");
 
+    let [zone, setZone] = useState("");
+    let [time, setTime] = useState("");
+
+
     
     const htmlContent = `
       <!DOCTYPE html>
@@ -74,6 +78,7 @@ function CrimeReportScreen() {
                 //value={search}
                 underlineColorAndroid="transparent"
                 placeholder="Lugares"
+                onChangeText={(text) => setZone({zone:text})}
                 />
 
             
@@ -83,8 +88,9 @@ function CrimeReportScreen() {
                 //value={search}
                 underlineColorAndroid="transparent"
                 placeholder="Rango de Fecha"
+                onChangeText={(text) => setTime({time:text})}
                 />
-                <Button style={styles.downloadPdf}>Descargar Reporte</Button>
+                <Button style={styles.downloadPdf} onPress={() => alert(zone)}>Descargar Reporte</Button>
             </View>
 
         </View>

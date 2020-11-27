@@ -34,7 +34,8 @@ const App = () => {
           <Stack.Screen
               name="RegisterScreen"
               component={RegisterScreen}
-              screenOptions={{ headerShown: true }}
+              screenOptions={{ headerShown: true }
+              }
           />
           <Stack.Screen
               name="InformationManagementScreen"
@@ -54,12 +55,12 @@ const App = () => {
           <Stack.Screen
               name="UserManagementScreen"
               component={UserManagementScreen}
-              options={{ headerShown: true }}
+              options={{ headerShown: true, }}
           />
           <Stack.Screen
               name="AlertsList"
               component={AlertsList}
-              options={{ headerShown: true }}
+              options={{ headerShown: true, title: "Alertas de Usuarios" }}
           />
           <Stack.Screen name="TabNavigator" component={TabNavigator} />
         </Stack.Navigator>
