@@ -40,6 +40,7 @@ export function MessageItem({ id, title, image, message }) {
                     ...data,
                     image: result.uri
                 });
+                await changeImage();
             }
         };
 
@@ -53,6 +54,8 @@ export function MessageItem({ id, title, image, message }) {
     const editMessage = () => {
         setIsEditing(true);
     };
+
+
     // PATCH to api to modify message description
     const changeMessage = () =>  {
         setIsEditing(false);
@@ -69,12 +72,22 @@ export function MessageItem({ id, title, image, message }) {
                 "Content-Type": "application/json",
             },
         })
-            .then((response) => response.json())
-            .then((json) => {
-                console.log('JSON-------------------------------------------------')
-                console.log(json);
-            });
-    }
+    };
+
+    // PATCH to api to modify message description
+    const changeImage = () =>  {
+        return fetch(baseURL + 'informations/' + data.id, {
+            method: 'PATCH',
+            body: JSON.stringify({
+                image: data.image,
+            }),
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+            },
+        })
+    };
+
 
     // DELETE to api to delete item
     function deleteMessage() {

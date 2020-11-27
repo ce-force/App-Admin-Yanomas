@@ -16,7 +16,7 @@ function InformationManagementScreen(){
 
     const [customData, setCustomData] = useState([]);
 
-    const [data, setData] = React.useState({
+    const [data, setData] = useState({
         title: '',
         type: '',
         image: '',
@@ -24,11 +24,11 @@ function InformationManagementScreen(){
     });
 
 
-    const [category, setCategory] = React.useState({
-        type: 'info',
+    const [category, setCategory] = useState({
+        type: 'reminder',
     });
 
-    const [AddItem, setAddItem] = React.useState({
+    const [AddItem, setAddItem] = useState({
         isAddingItem: false,
     });
 
@@ -38,6 +38,17 @@ function InformationManagementScreen(){
         {id: 2, type: "contact", label: "Contacto"}
     ];
 
+
+    const getTitle = () => {
+        for(let i = 0; i < categories.length; i++){
+            if(categories[i].type === category.type){
+                setData({
+                    ...data,
+                    title: categories[i].label
+                })
+            }
+        }
+    }
 
     useEffect(() => {
         fetch(baseURL + 'informations')
@@ -98,14 +109,12 @@ function InformationManagementScreen(){
     }
 
     function submitNewItem() {
-
         setAddItem({isAddingItem: false});
-
-        return fetch(baseURL + 'info', {
+        return fetch(baseURL + 'informations', {
             method: 'POST',
             body: JSON.stringify({
                 title: data.title,
-                type: category,
+                type: category.type,
                 image: data.image,
                 message: data.message
             }),
@@ -115,15 +124,9 @@ function InformationManagementScreen(){
             },
         })
             .then((response) => response.json())
-            .then((json) => {
-                alert(JSON.stringify(json))
-                setData({
-                    ...data,
-                    message: '',
-                });
-            });
+            .then((json) => Alert.alert(JSON.stringify(json)));
+    };
 
-    }
 
     function cancelAdd() {
         setAddItem({isAddingItem: false});
@@ -141,7 +144,7 @@ function InformationManagementScreen(){
             </Picker>
             {AddItem.isAddingItem === false ? (
             <LargeButton title="Agregar"
-                         onPress={() => newItem()}
+                         onPress={() => { getTitle(), newItem()}}
                          width={200}> </LargeButton>
                 ): <View/>}
 
