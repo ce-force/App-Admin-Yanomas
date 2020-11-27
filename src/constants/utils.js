@@ -5,7 +5,7 @@ export const StatusHeight = StatusBar.currentHeight;
 export const HeaderHeight = theme.SIZES.BASE * 3.5 + (StatusHeight || 0);
 export const iPhoneX = () =>
     Platform.OS === "ios" && (height === 812 || width === 812);
-export const baseURL = "";
+export const baseURL = "https://8b2cf6f52dda.ngrok.io/";
 
 export const AppVersion = "1.0.0";
 export const TeamName = "YaNoMás";

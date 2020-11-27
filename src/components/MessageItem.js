@@ -45,7 +45,7 @@ export function MessageItem({ id, title, image, message }) {
 
 
     function changeMessage() {
-        return fetch(baseURL, {
+        return fetch(baseURL + 'information', {
             method: 'PATCH',
             body: JSON.stringify({
                 id: id,

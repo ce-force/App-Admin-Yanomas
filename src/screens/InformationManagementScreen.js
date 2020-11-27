@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {StyleSheet, View, ScrollView, TextInput, Platform} from "react-native";
+import {StyleSheet, View, ScrollView, TextInput, Platform } from "react-native";
 import currentTeme from "../constants/Theme";
 
 import { baseURL } from "../constants/utils";
@@ -9,18 +9,12 @@ import {MessageItem} from "../components/MessageItem";
 import {LargeButton} from "../components/LargeButton";
 import * as ImagePicker from "expo-image-picker";
 
-const customData = require('../../assets/MessageData.json');
-
-const getRequests = async () => {
-    const response = await fetch(
-        baseURL + "/info"
-    ).catch((response) => console.log(response));
-    let requests = await response.json();
-};
 
 
 function InformationManagementScreen(){
 
+
+    const [customData, setCustomData] = useState([]);
 
     const [data, setData] = React.useState({
         title: '',
@@ -46,6 +40,19 @@ function InformationManagementScreen(){
 
 
     useEffect(() => {
+        fetch(baseURL + 'informations')
+            .then((response) => response.json())
+            .then((responseJson) => {
+                console.log(responseJson);
+                setCustomData(responseJson);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }, []);
+
+
+    useEffect(() => {
         (async () => {
             if (Platform.OS !== 'web') {
                 const { status } = await ImagePicker.requestCameraPermissionsAsync();
@@ -64,7 +71,6 @@ function InformationManagementScreen(){
             quality: 1,
         });
 
-        console.log(result);
 
         if (!result.cancelled) {
             setData({
@@ -93,12 +99,35 @@ function InformationManagementScreen(){
     }
 
     function submitNewItem() {
-        setData({
-            ...data,
-            message: '',
-        });
-        console.log(data.message);
+
         setAddItem({isAddingItem: false});
+        console.log(JSON.stringify({
+            title: data.title,
+            type: category.type,
+            image: data.image,
+            message: data.message
+        }))
+        return fetch(baseURL + 'info', {
+            method: 'POST',
+            body: JSON.stringify({
+                title: data.title,
+                type: category,
+                image: data.image,
+                message: data.message
+            }),
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+            },
+        })
+            .then((response) => response.json())
+            .then((json) => {
+                alert(JSON.stringify(json))
+                setData({
+                    ...data,
+                    message: '',
+                });
+            });
 
     }
 
@@ -141,7 +170,7 @@ function InformationManagementScreen(){
                                      title={element.title}
                                      image={element.image}
                                      message={element.message}
-                                     id={element.id}/>)
+                                     id={element._id}/>)
                     : (<View key={element.id}/>)})
                 }
 
