@@ -113,14 +113,28 @@ export function MessageItem({ _id, title, image, message, updateHandler }) {
         <View>
             {isEditing === true ? (
                     <View>
-                        <Card style={{borderRadius: 8}}>
+                        <Card>
                         <TextInput
-                            placeholder="Nueva Descripción"
+                            style={{ fontSize: 20}}
+                            placeholder="Nueva Descripción..."
                             autoCapitalize="none"
                             onChangeText={(val) => textInputChange(val)}
                         />
-                        <LargeButton width={100} title="Confirmar" onPress={() => changeMessage()}> </LargeButton>
-                            <LargeButton width={100} title="Cancelar" onPress={() => cancelEdit()}> </LargeButton>
+                            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
+                                <View style={[styles.signIn, {backgroundColor:currentTeme.COLORS.SUCCESS, width: '45%'}]}>
+                                    <TouchableOpacity onPress={() => { changeMessage()}}>
+                                        <View  style={{ flex: 1, flexDirection: 'row' }}>
+                                            <MaterialCommunityIcons name="image" color="white" size={20} style={{marginTop:6}}/>
+                                            <Text style={styles.textSign}>Confirmar</Text></View>
+                                    </TouchableOpacity>
+                                </View>
+                                <View style={[styles.signIn, {backgroundColor:currentTeme.COLORS.ERROR, width: '45%'}]}>
+                                    <TouchableOpacity onPress={() => { cancelEdit()}}>
+                                        <View  style={{ flex: 1, flexDirection: 'row' }}>
+                                            <Text style={styles.textSign}>Cancelar</Text></View>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
                         </Card>
                     </View>
                 ) :
