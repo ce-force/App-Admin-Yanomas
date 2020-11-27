@@ -143,7 +143,6 @@ function InformationManagementScreen(){
             },
         })
             .then((response) => response.json())
-            .then((json) => alert(JSON.stringify(json)));
     };
 
 
@@ -169,7 +168,7 @@ function InformationManagementScreen(){
                         {categories.map(item => <Picker.Item key={item.id} label={item.label} value={item.type}/>)}
                     </Picker>
                     {AddItem.isAddingItem === false ? (
-                        <View style={[styles.signIn, {backgroundColor:currentTeme.COLORS.ACTIVE}]}>
+                        <View style={[styles.signIn, {backgroundColor:currentTeme.COLORS.ACTIVE, width: '25%'}]}>
                             <TouchableOpacity
                                 onPress={() => { getTitle(), newItem() }}>
                                 <Text style={styles.textSign}>Agregar</Text>
@@ -180,19 +179,36 @@ function InformationManagementScreen(){
                 </View>
                     <View>
                         {AddItem.isAddingItem === true ? (
-                            <View>
-
+                            <View style={{marginTop: '50%'}}>
+                                <Text style={{fontSize: 20}}>Descripción</Text>
                                 <TextInput
-                                    placeholder="Descripción"
-                                    style={[styles.textInput, {
-                                        color: 'black'
-                                    }]}
-                                    autoCapitalize="none"
+                                    placeholder="info..."
+                                    underlineColorAndroid={currentTeme.COLORS.ACTIVE}
+                                    style={styles.textInputText}
                                     onChangeText={(val) => textInputChange(val)}
                                 />
-                                <LargeButton width={200} title="Seleccionar imagen" onPress={() => pickImage()}> </LargeButton>
-                                <LargeButton width={100} title="Confirmar" onPress={() => submitNewItem()}> </LargeButton>
-                                <LargeButton width={100} title="Cancelar" onPress={() => cancelAdd()}> </LargeButton>
+                                <View style={styles.imageBtn}>
+                                    <TouchableOpacity onPress={() => { pickImage()}}>
+                                        <View  style={{ flex: 1, flexDirection: 'row' }}>
+                                        <MaterialCommunityIcons name="image" color="white" size={20} style={{marginTop:6}}/>
+                                        <Text style={styles.textSign}>Seleccionar Imagen</Text></View>
+                                    </TouchableOpacity>
+                                </View>
+                                <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
+                                    <View style={[styles.signIn, {backgroundColor:currentTeme.COLORS.SUCCESS, width: '45%'}]}>
+                                        <TouchableOpacity onPress={() => { submitNewItem()}}>
+                                            <View  style={{ flex: 1, flexDirection: 'row' }}>
+                                                <MaterialCommunityIcons name="image" color="white" size={20} style={{marginTop:6}}/>
+                                                <Text style={styles.textSign}>Confirmar</Text></View>
+                                        </TouchableOpacity>
+                                    </View>
+                                    <View style={[styles.signIn, {backgroundColor:currentTeme.COLORS.ERROR, width: '45%'}]}>
+                                        <TouchableOpacity onPress={() => { cancelAdd()}}>
+                                            <View  style={{ flex: 1, flexDirection: 'row' }}>
+                                                <Text style={styles.textSign}>Cancelar</Text></View>
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
                             </View>
                             ) :
                             (<View>
@@ -255,7 +271,6 @@ const styles = StyleSheet.create({
     },
     signIn: {
         height: 35,
-        width: '25%',
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 10,
@@ -263,9 +278,25 @@ const styles = StyleSheet.create({
         marginTop: '12%',
         backgroundColor: currentTeme.COLORS.DEFAULT
     },
+    imageBtn: {
+        height: 35,
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 10,
+        elevation: 10,
+        backgroundColor: currentTeme.COLORS.INFO,
+        marginTop: '5%'
+    },
     textSign: {
         fontSize: 15,
         color: 'white',
+        marginTop: 3
+    },
+    textInputText: {
+        fontSize: 15,
+        color: 'black',
+        height: 50
     }
 });
 

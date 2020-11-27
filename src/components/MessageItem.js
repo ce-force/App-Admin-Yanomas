@@ -155,9 +155,11 @@ export function MessageItem({ _id, title, image, message, updateHandler }) {
                     <View style={[styles.signIn, {backgroundColor:currentTeme.COLORS.ERROR}]}>
                         <TouchableOpacity
                             onPress={() => { deleteMessage() }}
-                        ><View  style={{ flex: 1, flexDirection: 'row' }}>
+                        >
+                            <View style={{ flex: 1, flexDirection: 'row' }}>
                             <MaterialCommunityIcons name="trash-can" color="white" size={20} style={{marginTop:6}}/>
-                            <Text style={styles.textSign}> Eliminar</Text></View>
+                            <Text style={styles.textSign}> Eliminar</Text>
+                            </View>
                         </TouchableOpacity>
                     </View>
                 </View>
