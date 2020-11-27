@@ -141,7 +141,7 @@ export function MessageItem({ _id, title, image, message, updateHandler }) {
                         >
                             <View  style={{ flex: 1, flexDirection: 'row' }}>
                             <MaterialCommunityIcons name="pencil" color="white" size={20} style={{marginTop:6}}/>
-                            <TextInput style={styles.textSign}>Texto</TextInput></View>
+                            <Text style={styles.textSign}> Texto</Text></View>
                         </TouchableOpacity>
                     </View>
                     <View style={[styles.signIn, {backgroundColor:currentTeme.COLORS.INFO}]}>
@@ -149,7 +149,7 @@ export function MessageItem({ _id, title, image, message, updateHandler }) {
                             onPress={() => { pickImage() }}
                         ><View  style={{ flex: 1, flexDirection: 'row' }}>
                             <MaterialCommunityIcons name="image" color="white" size={20} style={{marginTop:6}}/>
-                            <TextInput style={styles.textSign}>Foto</TextInput></View>
+                            <Text style={styles.textSign}> Foto</Text></View>
                         </TouchableOpacity>
                     </View>
                     <View style={[styles.signIn, {backgroundColor:currentTeme.COLORS.ERROR}]}>
@@ -157,7 +157,7 @@ export function MessageItem({ _id, title, image, message, updateHandler }) {
                             onPress={() => { deleteMessage() }}
                         ><View  style={{ flex: 1, flexDirection: 'row' }}>
                             <MaterialCommunityIcons name="trash-can" color="white" size={20} style={{marginTop:6}}/>
-                            <TextInput style={styles.textSign}>Eliminar</TextInput></View>
+                            <Text style={styles.textSign}> Eliminar</Text></View>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
     },
     signIn: {
         height: 35,
-        width: '30%',
+        width: '32%',
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 10,
@@ -198,6 +198,7 @@ const styles = StyleSheet.create({
     },
     textSign: {
         fontSize: 15,
-        color: 'white'
+        color: 'white',
+        marginTop: 6
     }
 });

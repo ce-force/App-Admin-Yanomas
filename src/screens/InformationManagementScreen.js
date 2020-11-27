@@ -8,6 +8,7 @@ import {Picker} from '@react-native-picker/picker';
 import {MessageItem} from "../components/MessageItem";
 import {LargeButton} from "../components/LargeButton";
 import * as ImagePicker from "expo-image-picker";
+import {MaterialCommunityIcons} from "@expo/vector-icons";
 
 
 
@@ -155,8 +156,8 @@ function InformationManagementScreen(){
     return (
         <View style={styles.container}>
             <ScrollView refreshControl={
-                            <RefreshControl refreshing={refreshing} onRefresh={() => getRequests()} />
-                        }
+                <RefreshControl refreshing={refreshing} onRefresh={() => getRequests()} />
+            }
             >
                 <View style={{ flex: 1, justifyContent: 'space-around', flexDirection: 'row'}}>
                     <Picker
@@ -168,12 +169,11 @@ function InformationManagementScreen(){
                         {categories.map(item => <Picker.Item key={item.id} label={item.label} value={item.type}/>)}
                     </Picker>
                     {AddItem.isAddingItem === false ? (
-                        <View style={styles.signIn}>
+                        <View style={[styles.signIn, {backgroundColor:currentTeme.COLORS.ACTIVE}]}>
                             <TouchableOpacity
-                                 onPress={() => { getTitle(), newItem()}}
-                            >
-                                <Text style={[styles.textSign, {
-                                color: currentTeme.COLORS.WHITE}]}>Agregar</Text></TouchableOpacity>
+                                onPress={() => { getTitle(), newItem() }}>
+                                <Text style={styles.textSign}>Agregar</Text>
+                            </TouchableOpacity>
                         </View>
                         ): <View/>}
 
@@ -264,7 +264,8 @@ const styles = StyleSheet.create({
         backgroundColor: currentTeme.COLORS.DEFAULT
     },
     textSign: {
-        fontSize: 15
+        fontSize: 15,
+        color: 'white',
     }
 });
 
