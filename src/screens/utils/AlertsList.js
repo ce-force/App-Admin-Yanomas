@@ -35,7 +35,7 @@ const AlertsList = () => {
         {'.'}
         {item.title.toUpperCase()}
       </Text>
-      <Button style={{width:120,height:25, backgroundColor: currentTheme.COLORS.DEFAULT}} onPress={() => deleteAlert(item)} >Eliminar Alerta</Button>
+      {/*<Button style={{width:120,height:25, backgroundColor: currentTheme.COLORS.DEFAULT}} onPress={() => deleteAlert(item)} >Eliminar Alerta</Button>*/}
         </View>
 
         
