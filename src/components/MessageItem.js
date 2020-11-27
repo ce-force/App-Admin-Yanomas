@@ -1,10 +1,12 @@
-import {Text, View, Button, Platform, TextInput} from "react-native";
+import {Text, View, Button, Platform, TextInput, TouchableOpacity, StyleSheet} from "react-native";
 import {Card} from "react-native-elements";
 import { LargeButton } from "../components/LargeButton"
 import {baseURL} from "../constants/utils";
 
 import React, { useState, useEffect } from 'react';
 import * as ImagePicker from 'expo-image-picker';
+import currentTeme from "../constants/Theme";
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 export function MessageItem({ _id, title, image, message, updateHandler }) {
     const [data, setData] = React.useState({
@@ -124,7 +126,7 @@ export function MessageItem({ _id, title, image, message, updateHandler }) {
                 ) :
                 (
             <Card>
-                <Card.Title>{title}</Card.Title>
+                <Card.Title style={styles.title}>{title}</Card.Title>
                 <Card.Divider/>
                 <Text style={{marginBottom: 10}}>
                     {data.message}
@@ -133,21 +135,31 @@ export function MessageItem({ _id, title, image, message, updateHandler }) {
 
                 <Card.Image source={{ uri: data.image, width: 25, height: 25, }}/>
                 <View style={{ flex: 1, flexDirection:"row", justifyContent: 'space-around' }}>
-                    <View>
-                        <LargeButton title="Editar mensaje"
-                        onPress={() => {editMessage()}}
-                        width={150}> </LargeButton>
+                    <View style={[styles.signIn, {backgroundColor:currentTeme.COLORS.SUCCESS}]}>
+                        <TouchableOpacity
+                            onPress={() => { editMessage()}}
+                        >
+                            <View  style={{ flex: 1, flexDirection: 'row' }}>
+                            <MaterialCommunityIcons name="pencil" color="white" size={20} style={{marginTop:6}}/>
+                            <TextInput style={styles.textSign}>Texto</TextInput></View>
+                        </TouchableOpacity>
                     </View>
-                    <View>
-                        <LargeButton title="Cambiar foto"
-                                     onPress={() => pickImage()}
-                                     width={130}> </LargeButton>
+                    <View style={[styles.signIn, {backgroundColor:currentTeme.COLORS.INFO}]}>
+                        <TouchableOpacity
+                            onPress={() => { pickImage() }}
+                        ><View  style={{ flex: 1, flexDirection: 'row' }}>
+                            <MaterialCommunityIcons name="image" color="white" size={20} style={{marginTop:6}}/>
+                            <TextInput style={styles.textSign}>Foto</TextInput></View>
+                        </TouchableOpacity>
                     </View>
-                </View>
-                <View>
-                    <LargeButton title="Eliminar"
-                                 onPress={() => deleteMessage()}
-                                 width='100%'> </LargeButton>
+                    <View style={[styles.signIn, {backgroundColor:currentTeme.COLORS.ERROR}]}>
+                        <TouchableOpacity
+                            onPress={() => { deleteMessage() }}
+                        ><View  style={{ flex: 1, flexDirection: 'row' }}>
+                            <MaterialCommunityIcons name="trash-can" color="white" size={20} style={{marginTop:6}}/>
+                            <TextInput style={styles.textSign}>Eliminar</TextInput></View>
+                        </TouchableOpacity>
+                    </View>
                 </View>
             </Card>
                 )}
@@ -157,3 +169,35 @@ export function MessageItem({ _id, title, image, message, updateHandler }) {
     );
 
 }
+
+const styles = StyleSheet.create({
+
+    title: {
+        fontSize: 20,
+        paddingLeft: 10,
+    },
+    textInput: {
+        marginTop: 10,
+        paddingLeft: 10,
+        color: currentTeme.COLORS.ACTIVE,
+        fontSize: 20
+    },
+    button: {
+        alignItems: 'center',
+        marginTop: 10,
+        marginBottom: 10
+    },
+    signIn: {
+        height: 35,
+        width: '30%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 10,
+        elevation: 10,
+        marginTop: '12%',
+    },
+    textSign: {
+        fontSize: 15,
+        color: 'white'
+    }
+});
