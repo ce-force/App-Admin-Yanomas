@@ -81,7 +81,7 @@ return (
 
         <View>
 
-            <Card style={{borderRadius: 8, marginTop: 50}}>
+            <Card style={{borderRadius: 8}}>
                 <Card.Title>{title}</Card.Title>
                 <Card.Divider/>
                 <Text style={{marginBottom: 10}}>
