@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {StyleSheet, View, ScrollView, TextInput, Platform } from "react-native";
+import {StyleSheet, View, ScrollView, TextInput, Platform, RefreshControl } from "react-native";
 import currentTeme from "../constants/Theme";
 
 import { baseURL } from "../constants/utils";
@@ -16,6 +16,8 @@ function InformationManagementScreen(){
 
     const [customData, setCustomData] = useState([]);
 
+    const [refreshing, setRefreshing] = useState(false);
+
     const [data, setData] = useState({
         title: '',
         type: '',
@@ -25,7 +27,7 @@ function InformationManagementScreen(){
 
 
     const [category, setCategory] = useState({
-        type: 'reminder',
+        type: 'info',
     });
 
     const [AddItem, setAddItem] = useState({
@@ -50,15 +52,23 @@ function InformationManagementScreen(){
         }
     }
 
-    useEffect(() => {
-        fetch(baseURL + 'informations')
+
+    const getRequests = () => {
+        setRefreshing(true);
+        fetch(baseURL + '/informations')
             .then((response) => response.json())
             .then((responseJson) => {
                 setCustomData(responseJson);
+                setRefreshing(false);
             })
             .catch((error) => {
                 console.error(error);
             });
+    };
+
+
+    useEffect(() => {
+        getRequests();
     }, []);
 
 
@@ -110,7 +120,7 @@ function InformationManagementScreen(){
 
     function submitNewItem() {
         setAddItem({isAddingItem: false});
-        return fetch(baseURL + 'informations', {
+        return fetch(baseURL + '/informations', {
             method: 'POST',
             body: JSON.stringify({
                 title: data.title,
@@ -166,15 +176,23 @@ function InformationManagementScreen(){
                     </View>
                     ) :
                     (
-            <ScrollView style={{ marginBottom: 150}}>
-                {customData.map(element => { return category.type === element.type ? (
+            <ScrollView style={{ marginBottom: 150}}
+                        refreshControl={
+                            <RefreshControl refreshing={refreshing} onRefresh={() => getRequests()} />
+                        }
+            >
+                {customData.length !== 0 ? (
+                customData.map(element => { return category.type === element.type ? (
                         <MessageItem key={element._id}
                                      title={element.title}
                                      image={element.image}
                                      message={element.message}
-                                     id={element._id}/>)
-                    : (<View key={element.id}/>)})
-                }
+                                     _id={element._id}
+                                     updateHandler={getRequests} />)
+                    : (<View key={element._id}/>)})
+                    )
+                    :
+                    (<View/>)}
 
             </ScrollView>
             )}

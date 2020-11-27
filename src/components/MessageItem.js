@@ -6,11 +6,11 @@ import {baseURL} from "../constants/utils";
 import React, { useState, useEffect } from 'react';
 import * as ImagePicker from 'expo-image-picker';
 
-export function MessageItem({ id, title, image, message }) {
+export function MessageItem({ _id, title, image, message, updateHandler }) {
     const [data, setData] = React.useState({
         message: message,
         image: image,
-        id: id
+        id: _id
     });
 
 
@@ -59,10 +59,7 @@ export function MessageItem({ id, title, image, message }) {
     // PATCH to api to modify message description
     const changeMessage = () =>  {
         setIsEditing(false);
-        console.log(JSON.stringify({
-            message: data.message,
-        }));
-        return fetch(baseURL + 'informations/' + data.id, {
+        return fetch(baseURL + '/informations/' + data.id, {
             method: 'PATCH',
             body: JSON.stringify({
                 message: data.message,
@@ -76,7 +73,7 @@ export function MessageItem({ id, title, image, message }) {
 
     // PATCH to api to modify message description
     const changeImage = () =>  {
-        return fetch(baseURL + 'informations/' + data.id, {
+        return fetch(baseURL + '/informations/' + data.id, {
             method: 'PATCH',
             body: JSON.stringify({
                 image: data.image,
@@ -91,19 +88,17 @@ export function MessageItem({ id, title, image, message }) {
 
     // DELETE to api to delete item
     function deleteMessage() {
-        return fetch(baseURL, {
+        return fetch(baseURL + '/informations/' + data.id, {
             method: 'DELETE',
-            body: JSON.stringify({
-               id: data.id,
-                message: data.message
-            }),
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json",
             },
         })
             .then((response) => response.json())
-            .then((json) => alert(JSON.stringify(json)));
+            .then((json) => {
+                updateHandler();
+            });
     }
 
 
@@ -128,7 +123,7 @@ export function MessageItem({ id, title, image, message }) {
                     </View>
                 ) :
                 (
-            <Card style={{borderRadius: 8}}>
+            <Card>
                 <Card.Title>{title}</Card.Title>
                 <Card.Divider/>
                 <Text style={{marginBottom: 10}}>
