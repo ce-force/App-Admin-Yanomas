@@ -1,8 +1,10 @@
-import {Text, View, Button} from "react-native";
+import {Text, View, Button, Platform} from "react-native";
 import {Card} from "react-native-elements";
-import React from "react";
 import { LargeButton } from "../components/LargeButton"
 import {baseURL} from "../constants/utils";
+
+import React, { useState, useEffect } from 'react';
+import * as ImagePicker from 'expo-image-picker';
 
 export function MessageItem({ id, title, image, message }) {
     const [data, setData] = React.useState({
@@ -10,6 +12,36 @@ export function MessageItem({ id, title, image, message }) {
         image: image,
         id: id
     });
+
+
+    useEffect(() => {
+        (async () => {
+            if (Platform.OS !== 'web') {
+                const { status } = await ImagePicker.requestCameraPermissionsAsync();
+                if (status !== 'granted') {
+                    alert('Sorry, we need camera roll permissions to make this work!');
+                }
+            }
+        })();
+    }, []);
+
+        const pickImage = async () => {
+            let result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.All,
+                allowsEditing: true,
+                aspect: [4, 3],
+                quality: 1,
+            });
+
+            console.log(result);
+
+            if (!result.cancelled) {
+                setData({
+                    ...data,
+                    image: result.uri
+                });
+            }
+        };
 
 
     function changeMessage() {
@@ -60,13 +92,13 @@ return (
                 <Card.Image source={{ uri: data.image, width: 25, height: 25, }}/>
                 <View style={{ flex: 1, flexDirection:"row", justifyContent: 'space-around' }}>
                     <View>
-                        <LargeButton title="Editar"
+                        <LargeButton title="Editar mensaje"
                         onPress={changeMessage()}
                         width={150}> </LargeButton>
                     </View>
                     <View>
                         <LargeButton title="Cambiar foto"
-                                     onPress={() => deleteMessage()}
+                                     onPress={() => pickImage()}
                                      width={130}> </LargeButton>
                     </View>
                 </View>
