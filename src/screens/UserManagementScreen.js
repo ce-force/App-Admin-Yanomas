@@ -5,7 +5,8 @@ import { NavigationActions, StackActions } from 'react-navigation'
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import Images from "../constants/Images";
 import { Block, Button, Text, theme } from "galio-framework";
-
+import Title from "../components/Title";
+import firebase from "firebase";
 
 function UserManagementScreen({navigation}) {
     const [search, setSearch] = useState('');
@@ -45,6 +46,15 @@ function UserManagementScreen({navigation}) {
         {
             id: "002",
             title: "kiki@gmail.com",
+            profile: Images.ProfilePicture,
+            entryDate: "20/10/98", 
+            totalActions: 11,
+            currentLocation: "9.2323,-11.5353",
+            action: [["Alerta de Crimen", "13:00:00", "9.2323,-11.5353"]]
+          },
+          {
+            id: "003",
+            title: "k1@gmail.com",
             profile: Images.ProfilePicture,
             entryDate: "20/10/98", 
             totalActions: 11,
@@ -124,6 +134,16 @@ function UserManagementScreen({navigation}) {
       }
 
       const blockUser = () => {
+        {/*firebase.auth().updateUser(uid, {
+          disaled: true
+        })  
+        .then((userRecord) => {
+          console.log('Successfully updated user', userRecord.toJSON());
+        })
+        .catch((error) => {
+          console.log('Error updating user:', error);
+        });*/}
+
         return fetch('https://jsonplaceholder.typicode.com/posts', {
           method: 'POST',
           body: JSON.stringify({
@@ -148,6 +168,9 @@ function UserManagementScreen({navigation}) {
           underlineColorAndroid="transparent"
           placeholder="Filtrar por Usuario"
         />*/}
+          
+          <Title >Gestión de Usuarios</Title>
+
            <SafeAreaView style={styles.container2}>
             <FlatList
                 data={DATA}
@@ -173,10 +196,11 @@ function UserManagementScreen({navigation}) {
 const styles = StyleSheet.create({
     container: {
         backgroundColor: "white",
+        flex:1
       },
       container2:{
         backgroundColor: "white",
-        top:40
+        top:0
       },
       itemStyle: {
          padding: 10,
