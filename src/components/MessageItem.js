@@ -1,4 +1,4 @@
-import {Text, View, Button, Platform} from "react-native";
+import {Text, View, Button, Platform, TextInput} from "react-native";
 import {Card} from "react-native-elements";
 import { LargeButton } from "../components/LargeButton"
 import {baseURL} from "../constants/utils";
@@ -13,6 +13,8 @@ export function MessageItem({ id, title, image, message }) {
         id: id
     });
 
+
+    const [isEditing, setIsEditing] = useState(false);
 
     useEffect(() => {
         (async () => {
@@ -33,8 +35,6 @@ export function MessageItem({ id, title, image, message }) {
                 quality: 1,
             });
 
-            console.log(result);
-
             if (!result.cancelled) {
                 setData({
                     ...data,
@@ -43,13 +43,26 @@ export function MessageItem({ id, title, image, message }) {
             }
         };
 
+    const textInputChange = (val) => {
+        setData({
+            ...data,
+            message: val,
+        });
+    };
 
-    function changeMessage() {
-        return fetch(baseURL + 'information', {
+    const editMessage = () => {
+        setIsEditing(true);
+    };
+    // PATCH to api to modify message description
+    const changeMessage = () =>  {
+        setIsEditing(false);
+        console.log(JSON.stringify({
+            message: data.message,
+        }));
+        return fetch(baseURL + 'informations/' + data.id, {
             method: 'PATCH',
             body: JSON.stringify({
-                id: id,
-                message: message
+                message: data.message,
             }),
             headers: {
                 Accept: "application/json",
@@ -57,15 +70,19 @@ export function MessageItem({ id, title, image, message }) {
             },
         })
             .then((response) => response.json())
-            .then((json) => alert(JSON.stringify(json)));
+            .then((json) => {
+                console.log('JSON-------------------------------------------------')
+                console.log(json);
+            });
     }
 
+    // DELETE to api to delete item
     function deleteMessage() {
         return fetch(baseURL, {
             method: 'DELETE',
             body: JSON.stringify({
-               id: id,
-                message: message
+               id: data.id,
+                message: data.message
             }),
             headers: {
                 Accept: "application/json",
@@ -77,10 +94,27 @@ export function MessageItem({ id, title, image, message }) {
     }
 
 
-return (
+    function cancelEdit() {
+        setIsEditing(false);
+    }
+
+    return (
 
         <View>
-
+            {isEditing === true ? (
+                    <View>
+                        <Card style={{borderRadius: 8}}>
+                        <TextInput
+                            placeholder="Nueva Descripción"
+                            autoCapitalize="none"
+                            onChangeText={(val) => textInputChange(val)}
+                        />
+                        <LargeButton width={100} title="Confirmar" onPress={() => changeMessage()}> </LargeButton>
+                            <LargeButton width={100} title="Cancelar" onPress={() => cancelEdit()}> </LargeButton>
+                        </Card>
+                    </View>
+                ) :
+                (
             <Card style={{borderRadius: 8}}>
                 <Card.Title>{title}</Card.Title>
                 <Card.Divider/>
@@ -93,7 +127,7 @@ return (
                 <View style={{ flex: 1, flexDirection:"row", justifyContent: 'space-around' }}>
                     <View>
                         <LargeButton title="Editar mensaje"
-                        onPress={changeMessage()}
+                        onPress={() => {editMessage()}}
                         width={150}> </LargeButton>
                     </View>
                     <View>
@@ -108,6 +142,7 @@ return (
                                  width='100%'> </LargeButton>
                 </View>
             </Card>
+                )}
 
         </View>
 

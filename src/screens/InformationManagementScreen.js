@@ -43,7 +43,6 @@ function InformationManagementScreen(){
         fetch(baseURL + 'informations')
             .then((response) => response.json())
             .then((responseJson) => {
-                console.log(responseJson);
                 setCustomData(responseJson);
             })
             .catch((error) => {
@@ -101,12 +100,7 @@ function InformationManagementScreen(){
     function submitNewItem() {
 
         setAddItem({isAddingItem: false});
-        console.log(JSON.stringify({
-            title: data.title,
-            type: category.type,
-            image: data.image,
-            message: data.message
-        }))
+
         return fetch(baseURL + 'info', {
             method: 'POST',
             body: JSON.stringify({
@@ -129,6 +123,10 @@ function InformationManagementScreen(){
                 });
             });
 
+    }
+
+    function cancelAdd() {
+        setAddItem({isAddingItem: false});
     }
 
     return (
@@ -161,12 +159,13 @@ function InformationManagementScreen(){
                         />
                         <LargeButton width={200} title="Seleccionar imagen" onPress={() => pickImage()}> </LargeButton>
                         <LargeButton width={100} title="Confirmar" onPress={() => submitNewItem()}> </LargeButton>
+                        <LargeButton width={100} title="Cancelar" onPress={() => cancelAdd()}> </LargeButton>
                     </View>
                     ) :
                     (
             <ScrollView style={{ marginBottom: 150}}>
                 {customData.map(element => { return category.type === element.type ? (
-                        <MessageItem key={element.id}
+                        <MessageItem key={element._id}
                                      title={element.title}
                                      image={element.image}
                                      message={element.message}
