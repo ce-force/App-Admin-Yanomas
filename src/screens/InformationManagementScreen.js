@@ -74,38 +74,7 @@ function InformationManagementScreen(){
     }, []);
 
 
-    // Image picking permission
-    useEffect(() => {
-        (async () => {
-            if (Platform.OS !== 'web') {
-                const { status } = await ImagePicker.requestCameraPermissionsAsync();
-                if (status !== 'granted') {
-                    alert('Sorry, we need camera roll permissions to make this work!');
-                }
-            }
-        })();
-    }, []);
-
-    // Select image from gallery
-    const pickImage = async () => {
-        let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.All,
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 1,
-        });
-
-
-        if (!result.cancelled) {
-            setData({
-                ...data,
-                image: result.uri
-            });
-        }
-    };
-
-
-    // Captures change on input for adding/editing item
+    // Captures change on input for adding/editing message
     const textInputChange = (val) => {
         if( val.trim().length <= 300 ) {
             setData({
@@ -113,6 +82,15 @@ function InformationManagementScreen(){
                 message: val,
             });
         }
+    };
+
+
+    // Captures change on input for adding/editing image
+    const imageInputChange = (val) => {
+        setData({
+            ...data,
+            image: val,
+        });
     };
 
     // Picker value change
@@ -129,6 +107,8 @@ function InformationManagementScreen(){
     // POST mmethod for adding new item
     function submitNewItem() {
         setAddItem({isAddingItem: false});
+        console.log("-----------------------------------------------------------------------")
+        console.log(data.image);
         return fetch(baseURL + '/informations', {
             method: 'POST',
             body: JSON.stringify({
@@ -143,6 +123,7 @@ function InformationManagementScreen(){
             },
         })
             .then((response) => response.json())
+            .then((json) => alert(JSON.stringify(json)));
     };
 
 
@@ -182,23 +163,22 @@ function InformationManagementScreen(){
                             <View style={{marginTop: '50%'}}>
                                 <Text style={{fontSize: 20}}>Descripción</Text>
                                 <TextInput
-                                    placeholder="info..."
+                                    placeholder="Info..."
                                     underlineColorAndroid={currentTeme.COLORS.ACTIVE}
                                     style={styles.textInputText}
                                     onChangeText={(val) => textInputChange(val)}
                                 />
-                                <View style={styles.imageBtn}>
-                                    <TouchableOpacity onPress={() => { pickImage()}}>
-                                        <View  style={{ flex: 1, flexDirection: 'row' }}>
-                                        <MaterialCommunityIcons name="image" color="white" size={20} style={{marginTop:6}}/>
-                                        <Text style={styles.textSign}>Seleccionar Imagen</Text></View>
-                                    </TouchableOpacity>
-                                </View>
+                                <Text style={{fontSize: 20}}>Ingrese el URL de la imagen</Text>
+                                <TextInput
+                                    placeholder="Url..."
+                                    underlineColorAndroid={currentTeme.COLORS.ACTIVE}
+                                    style={styles.textInputText}
+                                    onChangeText={(val) => imageInputChange(val)}
+                                />
                                 <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
                                     <View style={[styles.signIn, {backgroundColor:currentTeme.COLORS.SUCCESS, width: '45%'}]}>
                                         <TouchableOpacity onPress={() => { submitNewItem()}}>
                                             <View  style={{ flex: 1, flexDirection: 'row' }}>
-                                                <MaterialCommunityIcons name="image" color="white" size={20} style={{marginTop:6}}/>
                                                 <Text style={styles.textSign}>Confirmar</Text></View>
                                         </TouchableOpacity>
                                     </View>
