@@ -87,12 +87,10 @@ function InformationManagementScreen(){
 
     // Captures change on input for adding/editing image
     const imageInputChange = (val) => {
-        if( val.trim().length <= 300 ) {
-            setData({
-                ...data,
-                image: val,
-            });
-        }
+        setData({
+            ...data,
+            image: val,
+        });
     };
 
     // Picker value change
@@ -125,7 +123,7 @@ function InformationManagementScreen(){
             },
         })
             .then((response) => response.json())
-            .then((json) => Alert.alert(JSON.stringify(json)));
+            .then((json) => alert(JSON.stringify(json)));
     };
 
 

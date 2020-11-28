@@ -4,7 +4,6 @@ import { LargeButton } from "../components/LargeButton"
 import {baseURL} from "../constants/utils";
 
 import React, { useState, useEffect } from 'react';
-import * as ImagePicker from 'expo-image-picker';
 import currentTeme from "../constants/Theme";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
@@ -18,34 +17,16 @@ export function MessageItem({ _id, title, image, message, updateHandler }) {
 
     const [isEditing, setIsEditing] = useState(false);
 
-    useEffect(() => {
-        (async () => {
-            if (Platform.OS !== 'web') {
-                const { status } = await ImagePicker.requestCameraPermissionsAsync();
-                if (status !== 'granted') {
-                    alert('Sorry, we need camera roll permissions to make this work!');
-                }
-            }
-        })();
-    }, []);
 
-        const pickImage = async () => {
-            let result = await ImagePicker.launchImageLibraryAsync({
-                mediaTypes: ImagePicker.MediaTypeOptions.All,
-                allowsEditing: true,
-                aspect: [4, 3],
-                quality: 1,
-            });
+    // Captures change on input for adding/editing image
+    const imageInputChange = (val) => {
+        setData({
+            ...data,
+            image: val,
+        });
+    };
 
-            if (!result.cancelled) {
-                setData({
-                    ...data,
-                    image: result.uri
-                });
-                await changeImage();
-            }
-        };
-
+    // Captures change on input for adding/editing text
     const textInputChange = (val) => {
         setData({
             ...data,
@@ -75,6 +56,8 @@ export function MessageItem({ _id, title, image, message, updateHandler }) {
 
     // PATCH to api to modify message description
     const changeImage = () =>  {
+        console.log(data.image)
+        setIsEditing(false);
         return fetch(baseURL + '/informations/' + data.id, {
             method: 'PATCH',
             body: JSON.stringify({
@@ -124,7 +107,28 @@ export function MessageItem({ _id, title, image, message, updateHandler }) {
                             <View style={[styles.signIn, {backgroundColor:currentTeme.COLORS.SUCCESS, width: '45%'}]}>
                                 <TouchableOpacity onPress={() => { changeMessage()}}>
                                     <View  style={{ flex: 1, flexDirection: 'row' }}>
-                                        <MaterialCommunityIcons name="image" color="white" size={20} style={{marginTop:6}}/>
+                                        <Text style={styles.textSign}>Confirmar</Text></View>
+                                </TouchableOpacity>
+                            </View>
+                            <View style={[styles.signIn, {backgroundColor:currentTeme.COLORS.ERROR, width: '45%'}]}>
+                                <TouchableOpacity onPress={() => { cancelEdit()}}>
+                                    <View  style={{ flex: 1, flexDirection: 'row' }}>
+                                        <Text style={styles.textSign}>Cancelar</Text></View>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </Card>
+                    <Card>
+                        <TextInput
+                            style={{ fontSize: 20}}
+                            placeholder="Nueva URL..."
+                            autoCapitalize="none"
+                            onChangeText={(val) => imageInputChange(val)}
+                        />
+                        <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
+                            <View style={[styles.signIn, {backgroundColor:currentTeme.COLORS.SUCCESS, width: '45%'}]}>
+                                <TouchableOpacity onPress={() => { changeImage()}}>
+                                    <View  style={{ flex: 1, flexDirection: 'row' }}>
                                         <Text style={styles.textSign}>Confirmar</Text></View>
                                 </TouchableOpacity>
                             </View>
@@ -155,17 +159,10 @@ export function MessageItem({ _id, title, image, message, updateHandler }) {
                         >
                             <View  style={{ flex: 1, flexDirection: 'row' }}>
                             <MaterialCommunityIcons name="pencil" color="white" size={20} style={{marginTop:6}}/>
-                            <Text style={styles.textSign}> Texto</Text></View>
+                            <Text style={styles.textSign}> Editar</Text></View>
                         </TouchableOpacity>
                     </View>
-                    <View style={[styles.signIn, {backgroundColor:currentTeme.COLORS.INFO}]}>
-                        <TouchableOpacity
-                            onPress={() => { pickImage() }}
-                        ><View  style={{ flex: 1, flexDirection: 'row' }}>
-                            <MaterialCommunityIcons name="image" color="white" size={20} style={{marginTop:6}}/>
-                            <Text style={styles.textSign}> Foto</Text></View>
-                        </TouchableOpacity>
-                    </View>
+
                     <View style={[styles.signIn, {backgroundColor:currentTeme.COLORS.ERROR}]}>
                         <TouchableOpacity
                             onPress={() => { deleteMessage() }}
