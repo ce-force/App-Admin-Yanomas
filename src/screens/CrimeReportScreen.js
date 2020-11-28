@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import { Text, View, TextInput, Alert, ActivityIndicator } from "react-native";
+import { View, StyleSheet,TextInput, Alert, ActivityIndicator } from "react-native";
 import { Dimensions } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import {
@@ -19,12 +19,11 @@ import { Value } from "react-native-reanimated";
 import { UserContext } from "../communication/UserContext";
 import IconButton from "../components/IconButton";
 import { baseURL } from "../constants/utils";
-import { Button } from "galio-framework";
 import * as Print from 'expo-print';
 import { captureScreen } from "react-native-view-shot";
-import CameraRollExtended from 'react-native-store-photos-album'
-
-
+import CameraRollExtended from 'react-native-store-photos-album';
+import { Block, Button, Text, theme } from "galio-framework";
+import currentTeme from "../constants/Theme";
 
 const FRECUENCY = {
   acoso: 5,
@@ -168,7 +167,8 @@ export default function CrimeReportScreen() {
   }
 
   return (
-    <Card>
+    <View style={styles.container}>
+    <Card >
       <Title>Reportes</Title>
       <Picker
         onValueChange={(val) => {
@@ -186,7 +186,10 @@ export default function CrimeReportScreen() {
       <IconButton
           title="Actualizar"
           clicked={getFrecuency}
-        ></IconButton>
+      ></IconButton>
+      {/*<Button style={styles.blockButton} onPressed={() => getFrecuency}>Actualizar</Button>*/}
+
+
       {frencuencies}
       <ScrollView horizontal>
         <ProgressChart
@@ -207,6 +210,8 @@ export default function CrimeReportScreen() {
           title="Descargar Reporte"
           clicked={getReport}
       ></IconButton>
+      {/*<Button style={styles.blockButton} onPressed={() => getReport}>Descargar Reporte</Button>*/}
+
 
       <Text >
                 {
@@ -215,6 +220,26 @@ export default function CrimeReportScreen() {
                 }
               </Text>
     </Card>
+    </View>
     
   );
+
+
 }
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: "white",
+    flex:1
+  },
+
+  blockButton:{
+    height: 35,
+    width: 400,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+    elevation: 10,
+    backgroundColor: currentTeme.COLORS.DEFAULT
+  }
+});

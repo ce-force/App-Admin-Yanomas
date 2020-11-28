@@ -126,7 +126,7 @@ function SettingsScreen({ navigation }) {
         <Block flex style={styles.profile}>
             <Block flex>
                 <ImageBackground
-                    source={Images.ProfileBackground}
+                    source={Images.Background}
                     style={styles.profileContainer}
                     imageStyle={styles.profileBackground}
                 >

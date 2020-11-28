@@ -8,6 +8,7 @@ import MapManagementScreen from "../screens/MapManagementScreen";
 import UserManagementScreen from "../screens/UserManagementScreen";
 import CrimeReportScreen from "../screens/CrimeReportScreen";
 import SettingsScreen from "../screens/SettingsScreen";
+import baseUrl from "../constants/utils";
 
 const Tab = createBottomTabNavigator();
 

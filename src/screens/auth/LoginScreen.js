@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 import {
   View,
-  Text,
   TouchableOpacity,
   TextInput,
   Platform,
@@ -22,6 +21,9 @@ import { UserContext } from "../../communication/UserContext";
 import * as Google from "expo-google-app-auth";
 import { baseURL } from "../../constants/utils";
 import * as GoogleSignIn from "expo-google-sign-in";
+import currentTeme from "../../constants/Theme";
+import { Block, Button, Text } from "galio-framework";
+
 
 const LoginScreen = ({ navigation }) => {
   const [getGlobalUser, setGlobalUser] = useContext(UserContext);
@@ -254,12 +256,15 @@ const LoginScreen = ({ navigation }) => {
        
         <View style={styles.button}>
 
-          <LargeButton
+          {/*<LargeButton
             onPress={() => {
               loginHandle(data.email, data.password);
             }}
             title="Ingresar"
-          />
+        />*/}
+              <Button style={styles.blockButton} onPress={() => loginHandle(data.email, data.password)}>Iniciar Sesión</Button>
+
+
         </View>
       </Animatable.View>
     </View>
@@ -318,6 +323,15 @@ const styles = StyleSheet.create({
   errorMsg: {
     color: theme.COLORS.ERROR,
     fontSize: 14,
+  },
+  blockButton:{
+    height: 35,
+    width: 400,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+    elevation: 10,
+    backgroundColor: currentTeme.COLORS.DEFAULT
   }
 });
 
