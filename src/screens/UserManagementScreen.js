@@ -17,6 +17,23 @@ function UserManagementScreen({navigation}) {
     useEffect(() => {
       getUsers();
     }, []);
+
+    const searchFilterFunction = (text) => {
+      if (text) {
+        const newData = masterDataSource.filter(function (item) {
+          const itemData = item.name
+            ? item.name.toUpperCase()
+            : ''.toUpperCase();
+          const textData = text.toUpperCase();
+          return itemData.indexOf(textData) > -1;
+        });
+        setFilteredDataSource(newData);
+        setSearch(text);
+      } else {
+        setFilteredDataSource(masterDataSource);
+        setSearch(text);
+      }
+    };
     
     const Item = ({ title, email, profile, entryDate, totalActions, currentLocation, action })=> {
         return (
@@ -96,6 +113,7 @@ function UserManagementScreen({navigation}) {
         let responseJson = await response.json();
        // console.log(JSON.parse(responseJson));
         setFilteredDataSource( responseJson);
+        setMasterDataSource( responseJson);
       }
 
       const showActions = (currentUser) => {
@@ -132,15 +150,16 @@ function UserManagementScreen({navigation}) {
 
     return (
         <View style={styles.container}>
-        {/*<TextInput
+                  
+          <Title >Gestión de Usuarios</Title>
+
+          <TextInput
           style={styles.textInputStyle}
           onChangeText={(text) => searchFilterFunction(text)}
           value={search}
           underlineColorAndroid="transparent"
           placeholder="Filtrar por Usuario"
-        />*/}
-                  
-          <Title >Gestión de Usuarios</Title>
+        />
 
            <SafeAreaView style={styles.container2}>
             <FlatList

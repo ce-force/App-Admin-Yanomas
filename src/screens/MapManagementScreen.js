@@ -13,11 +13,27 @@ export default function MapManagementScreen({navigation}) {
     const [search, setSearch] = useState('');
     const [filteredDataSource, setFilteredDataSource] = useState([]);
     const [masterDataSource, setMasterDataSource] = useState([]);
-    const [alertId, setAlertId] = useState([]);
 
     useEffect(() => {
       getUsers();
     }, []);
+
+    const searchFilterFunction = (text) => {
+      if (text) {
+        const newData = masterDataSource.filter(function (item) {
+          const itemData = item.category
+            ? item.category.toUpperCase()
+            : ''.toUpperCase();
+          const textData = text.toUpperCase();
+          return itemData.indexOf(textData) > -1;
+        });
+        setFilteredDataSource(newData);
+        setSearch(text);
+      } else {
+        setFilteredDataSource(masterDataSource);
+        setSearch(text);
+      }
+    };
     
     const Item = ({ title, email, entryDate, action })=> {
         return (
@@ -36,7 +52,7 @@ export default function MapManagementScreen({navigation}) {
                 }}
               >
                 <View>
-                  <Text style={styles.title}>{title}</Text>
+                  <Text style={styles.title}>{title.toUpperCase()}</Text>
                   <Text style={styles.action}>{action}</Text>
                   <Text style={styles.email}>{email}</Text>
                   
@@ -79,6 +95,7 @@ export default function MapManagementScreen({navigation}) {
        
         console.log(responseJson);
         setFilteredDataSource( responseJson);
+        setMasterDataSource(responseJson);
       }
 
       const deleteAlert = async (alertId) => {
@@ -98,15 +115,16 @@ export default function MapManagementScreen({navigation}) {
 
     return (
         <View style={styles.container}>
-        {/*<TextInput
+
+                  
+          <Title >Gestión de Alertas</Title>
+          <TextInput
           style={styles.textInputStyle}
           onChangeText={(text) => searchFilterFunction(text)}
           value={search}
           underlineColorAndroid="transparent"
-          placeholder="Filtrar por Usuario"
-        />*/}
-                  
-          <Title >Gestión de Alertas</Title>
+          placeholder="Filtrar por Categoría"
+        />
 
            <SafeAreaView style={styles.container2}>
             <FlatList

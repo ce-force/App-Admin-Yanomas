@@ -84,6 +84,7 @@ export default function CrimeReportScreen() {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(false);
   const [savedImagePath, setSavedImagePath] = useState('');
+  const [barChartData, setBarChartData] = useState('');
 
   const fetchData = async () => {
     const user = await getGlobalUser();
@@ -135,6 +136,14 @@ export default function CrimeReportScreen() {
     );
   }
 
+  const resData = {
+    labels: ["January", "February", "March", "April", "May", "June"],
+    datasets: [
+      {
+        data: [20, 45, 28, 80, 99, 43]
+      }
+    ]
+  };
   let sum = 0;
   let data = { labels: [], data: [] };
   let frencuencies = null;
@@ -147,6 +156,7 @@ export default function CrimeReportScreen() {
       labels: Object.keys(frecuency), // optional
       data: Object.keys(frecuency).map((key) => frecuency[key] / sum),
     };
+
 
     frencuencies = Object.keys(frecuency).map((key) => (
       <Card key={key}>
