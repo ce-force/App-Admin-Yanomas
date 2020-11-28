@@ -1,233 +1,175 @@
-import React, { useRef, useState } from "react";
-import {
-  StyleSheet,
-  View,
-  ScrollView,
-  ActivityIndicator,
-  Alert,
-} from "react-native";
-import { Marker } from "react-native-maps";
-import * as Location from "expo-location";
-import { MaterialIcons } from "@expo/vector-icons";
-import { FontAwesome } from "@expo/vector-icons";
-import { baseURL } from "../constants/utils";
-
+import React, {useState, useEffect} from "react";
+import { StyleSheet, View, SafeAreaView,Image, TextInput,TouchableOpacity, FlatList, Keyboard} from "react-native";
+import currentTeme from "../constants/Theme";
+import { NavigationActions, StackActions } from 'react-navigation'
+import Icon from "@expo/vector-icons/MaterialCommunityIcons";
+import Images from "../constants/Images";
+import { Block, Button, Text, theme } from "galio-framework";
 import Title from "../components/Title";
-import Map from "../components/Map";
-import InfoArea from "../components/InfoArea";
-import IconButton from "../components/IconButton";
-import InputArea from "../components/InputArea";
-import { FlatList } from "react-native-gesture-handler";
+import firebase from "firebase";
+import { baseURL } from "./../constants/utils";
 
-const ALERTS = [
-  {
-    category: "Actividad sospechosa",
-    description: "s1",
-    coords: {
-      latitude: 9.868443,
-      longitude: -83.927897,
-    },
-    hourDate: "2014-08-20 15:30:00",
-  },
-  {
-    category: "Asalto",
-    description: "s1",
-    coords: {
-      latitude: 9.869443,
-      longitude: -83.927797,
-    },
-    hourDate: "2014-08-20 15:30:00",
-  },
-  {
-    category: "Actividad sospechosa",
-    description: "s1",
-    coords: {
-      latitude: 9.867443,
-      longitude: -83.927697,
-    },
-    hourDate: "2014-08-20 15:30:00",
-  },
-];
+export default function MapManagementScreen({navigation}) {
+    const [search, setSearch] = useState('');
+    const [filteredDataSource, setFilteredDataSource] = useState([]);
+    const [masterDataSource, setMasterDataSource] = useState([]);
+    const [alertId, setAlertId] = useState([]);
 
-const CRIMES = [
-  {
-    label: "Actividad sospechosa",
-    value: "Actividad sospechosa",
-  },
-  {
-    label: "Violación",
-    value: "Violación",
-  },
-  {
-    label: "Asalto",
-    value: "Asalto",
-  },
-  {
-    label: "Acoso",
-    value: "Acoso",
-  },
-];
+    useEffect(() => {
+      getUsers();
+    }, []);
+    
+    const Item = ({ title, email, entryDate, action })=> {
+        return (
+          <View style={styles.item}>
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between"
+              }}
+            >
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "row"
+                }}
+              >
+                <View>
+                  <Text style={styles.title}>{title}</Text>
+                  <Text style={styles.action}>{action}</Text>
+                  <Text style={styles.email}>{email}</Text>
+                  
+                  <Text
+                    style={{
+                      paddingLeft: 6,
+                      paddingTop: 4,
+                      color: "gray"
+                    }}
+                  >
+                    Fecha: {entryDate}
+                  </Text>
+                  <Button style={styles.blockButton} onPress={() => deleteAlert({action})}>Eliminar</Button>
 
-const MapManagementScreen = () => {
-  const [loadingGPS, setLoadingGPS] = useState(false);
-  const [reporting, setReporting] = useState(false);
-
-  let map = useRef(null);
-  const [crime, setCrime] = useState(null);
-  const [alerts, setAlerts] = useState(null);
-
-  const [location, setLocation] = useState({
-    latitude: 9.868443,
-    longitude: -83.927797,
-  });
-  let [category, setCategory] = useState("");
-  let [description, setDescription] = useState("");
-
-  const updateLocation = async () => {
-    setLoadingGPS(true);
-    let { status } = await Location.requestPermissionsAsync();
-    if (status !== "granted") {
-      Alert.alert("No se puede acceder al GPS");
-      setLoadingGPS(false);
-      return;
-    }
-    let tmpLocation = await Location.getCurrentPositionAsync({});
-    const finalLocation = {
-      latitude: tmpLocation.coords.latitude,
-      longitude: tmpLocation.coords.longitude,
-    };
-    moveCameraTo(finalLocation);
-    setLocation(finalLocation);
-    setLoadingGPS(false);
-  };
-
-  const moveCameraTo = (location) => {
-    map.current.animateCamera(
-      {
-        center: location,
-        zoom: 15,
-      },
-      1
-    );
-  };
-
-  const moveObserver = (location) => {
-    setLocation(location);
-    setCrime(null);
-  };
-
-  const getCrimesFromApi = async () => {
-    try {
-      let response = await fetch(baseURL + "/alerts");
-      let alerts = await response.json();
-      setAlerts(alerts);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const sendReport = () => {
-    if (!category) {
-      Alert.alert("Debe al menos seleccionar una categoría");
-      return;
-    }
-
-    fetch(baseURL + "/alerts", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        category: category,
-        description: description,
-        coords: location,
-        hourDate: new Date().toISOString(),
-      }),
-    });
-
-    Alert.alert("¡Muchas gracias por su colaboración!");
-    setDescription("");
-    setCrime("");
-    setReporting(false);
-  };
-
-  let alertMarkers = null;
-
-  if (!reporting && alerts) {
-    alertMarkers = alerts.map((el, i) => (
-      <Marker
-        key={i}
-        coordinate={el.coords}
-        onPress={() => setCrime(el)}
-        title={el.category}
-      >
-        <FontAwesome name="warning" size={24} color="black" />
-      </Marker>
-    ));
-  }
-
-  return (
-    <View style={{ backgroundColor:"white", flex: 1 }}>
-      <Title>Gestión de Alertas</Title>
-      <ScrollView style={styles.container}>
-        {reporting ? null : (
-          <View style={{ flex: 1, flexDirection: "row" }}>
-            <IconButton clicked={getCrimesFromApi}>
-              <FontAwesome name="refresh" size={30} color="white" />
-            </IconButton>
-            {/*<IconButton clicked={() => setReporting(true)}>
-              <FontAwesome name="bullhorn" size={30} color="white" />
-        </IconButton>*/}
+                  {/*<View style={{paddingLeft:10,paddingTop:10, paddingBottom:10, backgroundColor:currentTeme.COLORS.BORDER}}>
+                    <Text>Acción: {action[0]}</Text>
+                    <Text>Hora: {action[1]}</Text>
+                    <Text>Ubicación: {action[2]}</Text>
+                </View>*/}
+                </View>
+                <View>
+                    {/*<Button style={styles.blockButton} onPress={() => showActions()}>Alertas</Button>*/}
+                </View>
+              </View>
+            </View>
           </View>
-        )}
-        <Map
-          changeLocation={moveObserver}
-          location={location}
-          mapRef={map}
-          reporting={reporting}
-        >
-          {alertMarkers}
-        </Map>
-        <View style={{ flex: 1, flexDirection: "row" }}>
-          <IconButton disabled={loadingGPS} clicked={updateLocation}>
-            {loadingGPS ? (
-              <ActivityIndicator color="white"></ActivityIndicator>
-            ) : (
-              <MaterialIcons name="gps-fixed" size={24} color="white" />
-            )}
-          </IconButton>
-          <IconButton clicked={() => moveCameraTo(location)}>
-            <FontAwesome name="map-marker" size={24} color="white" />
-          </IconButton>
+        );
+      }
+
+      const getUsers =  async ()  => {
+        let response = await fetch(baseURL + "/alerts", {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+          },
+          
+        });
+        let responseJson = await response.json();
+       
+        console.log(responseJson);
+        setFilteredDataSource( responseJson);
+      }
+
+      const deleteAlert = async (alertId) => {
+        //console.log(alertId);
+        let response = await fetch(baseURL + "/user/" + "5fc0a27eb622f2be8ac39973", {
+          method: "DELETE",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+          },
+          
+        });
+        let responseJson = await response;
+       
+      } 
+    
+
+    return (
+        <View style={styles.container}>
+        {/*<TextInput
+          style={styles.textInputStyle}
+          onChangeText={(text) => searchFilterFunction(text)}
+          value={search}
+          underlineColorAndroid="transparent"
+          placeholder="Filtrar por Usuario"
+        />*/}
+                  
+          <Title >Gestión de Alertas</Title>
+
+           <SafeAreaView style={styles.container2}>
+            <FlatList
+                data={filteredDataSource}
+                renderItem={({ item }) => (
+                <Item
+                    title={item.category}
+                    email={item.description}
+                    entryDate={item.hourDate}
+                    action={item._id}
+                />
+                )}
+                keyExtractor={item => item.id}
+            />
+            </SafeAreaView>
         </View>
-        {reporting ? (
-          <InputArea
-            options={CRIMES}
-            selected={category}
-            description={description}
-            handleChangeValue={(val) => {
-              if (val) {
-                setCategory(val);
-              }
-            }}
-            handleChangeDescription={setDescription}
-            location={location}
-            finished={sendReport}
-          ></InputArea>
-        ) : (
-          <InfoArea crime={crime}></InfoArea>
-        )}
-      </ScrollView>
-    </View>
-  );
-};
+    );
+}
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "white"
-  },
+    container: {
+        backgroundColor: "white",
+        flex:1
+      },
+      container2:{
+        backgroundColor: "white",
+        top:0
+      },
+      itemStyle: {
+         padding: 10,
+      },
+      textInputStyle: {
+          height: 40,
+          borderWidth: 1,
+          paddingLeft: 20,
+          margin: 5,
+          borderColor: '#009688',
+          backgroundColor: '#FFFFFF',
+        },
+      item: {
+          height: 150,
+        },
+        title: {
+          fontSize: 25,
+          paddingLeft: 6,
+          paddingTop: 5,
+          shadowOpacity: 0
+        },
+        email:{
+          fontSize: 12,
+          paddingLeft: 6
+        },
+        entryDate:{
+          fontSize: 12,
+          paddingLeft: 6
+        },
+        action:{
+          paddingLeft: 6
+        },
+      blockButton:{
+          width: 80,
+          height: 30,
+          backgroundColor: currentTeme.COLORS.DEFAULT
+      }
 });
 
-export default MapManagementScreen;

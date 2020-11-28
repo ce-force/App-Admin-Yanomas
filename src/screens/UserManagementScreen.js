@@ -7,63 +7,18 @@ import Images from "../constants/Images";
 import { Block, Button, Text, theme } from "galio-framework";
 import Title from "../components/Title";
 import firebase from "firebase";
+import {baseURL} from "./../constants/utils";
 
 function UserManagementScreen({navigation}) {
     const [search, setSearch] = useState('');
     const [filteredDataSource, setFilteredDataSource] = useState([]);
     const [masterDataSource, setMasterDataSource] = useState([]);
 
-    let myLoop = [];
-
-    const searchFilterFunction = (text) => {
-        if (text) {
-          const newData = masterDataSource.filter(function (item) {
-            const itemData = item.title
-              ? item.title.toUpperCase()
-              : ''.toUpperCase();
-            const textData = text.toUpperCase();
-            return itemData.indexOf(textData) > -1;
-          });
-          setFilteredDataSource(newData);
-          setSearch(text);
-        } else {
-          setFilteredDataSource(masterDataSource);
-          setSearch(text);
-        }
-      };
-
-    const DATA = [
-        {
-          id: "001",
-          title: "reds@gmail.com",
-          profile: Images.ProfilePicture,
-          entryDate: "20/10/98", 
-          totalActions: 11,
-          currentLocation: "9.2323,-11.5353",
-          action: [["Alerta de Crimen", "13:00:00", "9.2323,-11.5353"],
-                   ["Alerta de Crimen", "13:00:00", "9.2323,-11.5353"]]
-        },
-        {
-            id: "002",
-            title: "kiki@gmail.com",
-            profile: Images.ProfilePicture,
-            entryDate: "20/10/98", 
-            totalActions: 11,
-            currentLocation: "9.2323,-11.5353",
-            action: [["Alerta de Crimen", "13:00:00", "9.2323,-11.5353"]]
-          },
-          {
-            id: "003",
-            title: "k1@gmail.com",
-            profile: Images.ProfilePicture,
-            entryDate: "20/10/98", 
-            totalActions: 11,
-            currentLocation: "9.2323,-11.5353",
-            action: [["Alerta de Crimen", "13:00:00", "9.2323,-11.5353"]]
-          },
-      ];
+    useEffect(() => {
+      getUsers();
+    }, []);
     
-    const Item = ({ title, profile, entryDate, totalActions, currentLocation, action })=> {
+    const Item = ({ title, email, profile, entryDate, totalActions, currentLocation, action })=> {
         return (
           <View style={styles.item}>
             <View
@@ -85,6 +40,7 @@ function UserManagementScreen({navigation}) {
                 />
                 <View>
                   <Text style={styles.title}>{title}</Text>
+                  <Text style={styles.email}>{email}</Text>
                   <Text
                     style={{
                       paddingLeft: 6,
@@ -119,12 +75,27 @@ function UserManagementScreen({navigation}) {
                 </View>
                 <View>
                     <Button style={styles.blockButton} onPress={() => blockUser()}>Bloquear</Button>
-                    <Button style={styles.blockButton} onPress={() => showActions()}>Alertas</Button>
                 </View>
               </View>
             </View>
           </View>
         );
+      }
+
+      const getUsers =  async ()  => {
+        console.log("asadasdas");
+        let response = await fetch(baseURL + "/users", {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+          },
+          
+        });
+
+        let responseJson = await response.json();
+       // console.log(JSON.parse(responseJson));
+        setFilteredDataSource( responseJson);
       }
 
       const showActions = (currentUser) => {
@@ -134,7 +105,7 @@ function UserManagementScreen({navigation}) {
       }
 
       const blockUser = () => {
-        {/*firebase.auth().updateUser(uid, {
+       firebase.auth().updateUser(uid, {
           disabled: true
         })  
         .then((userRecord) => {
@@ -142,9 +113,9 @@ function UserManagementScreen({navigation}) {
         })
         .catch((error) => {
           console.log('Error updating user:', error);
-        });*/}
+        });
 
-        return fetch('https://jsonplaceholder.typicode.com/posts', {
+        {/* return fetch('https://jsonplaceholder.typicode.com/posts', {
           method: 'POST',
           body: JSON.stringify({
             currentUserMail: 'currentusername',
@@ -155,7 +126,7 @@ function UserManagementScreen({navigation}) {
           },
         })
           .then((response) => response.json())
-          .then((json) => alert(JSON.stringify(json)))
+          .then((json) => alert(JSON.stringify(json)))*/}
       } 
     
 
@@ -173,10 +144,11 @@ function UserManagementScreen({navigation}) {
 
            <SafeAreaView style={styles.container2}>
             <FlatList
-                data={DATA}
+                data={filteredDataSource}
                 renderItem={({ item }) => (
                 <Item
-                    title={item.title}
+                    title={item.name}
+                    email={item.email}
                     imageUrl={item.imageUrl}
                     profile={item.profile}
                     entryDate={item.entryDate}
@@ -220,6 +192,10 @@ const styles = StyleSheet.create({
           paddingLeft: 6,
           paddingTop: 5,
           shadowOpacity: 0
+        },
+        email:{
+          fontSize: 12,
+          paddingLeft: 6,
         },
       blockButton:{
           width: 80,
