@@ -225,7 +225,7 @@ const styles = StyleSheet.create({
       blockButton:{
           width: 80,
           height: 30,
-          backgroundColor: currentTeme.COLORS.PRIMARY
+          backgroundColor: currentTeme.COLORS.DEFAULT
       }
 });
 

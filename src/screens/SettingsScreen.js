@@ -84,7 +84,7 @@ function SettingsScreen({ navigation }) {
             .then(
                 () => {
                     ToastAndroid.show("Cerrando Sesión...", ToastAndroid.SHORT);
-                    navigation.navigate('Login');
+                    navigation.navigate('LoginScreen');
                 },
                 (error) => {
                     Alert.alert(error.message);
