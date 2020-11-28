@@ -7,12 +7,13 @@ import {
 } from "@react-navigation/stack";
 
 // Screens
-import RegisterScreen from "./src/screens/auth/RegisterScreen";
 import LoginScreen from "./src/screens/auth/LoginScreen";
 import InformationManagementScreen from "./src/screens/InformationManagementScreen";
 import CrimeReportScreen from "./src/screens/CrimeReportScreen";
 import MapManagementScreen from "./src/screens/MapManagementScreen";
 import UserManagementScreen from "./src/screens/UserManagementScreen";
+import { UserContext, UserProvider } from "./src/communication/UserContext";
+
 
 import * as firebase from "firebase";
 import { firebaseConfig } from "./src/config/FirebaseConfig";
@@ -20,21 +21,30 @@ import TabNavigator from "./src/components/TabNavigator";
 
 const Stack = createStackNavigator();
 
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
 
 const App = () => {
+
+  const [loggedIn, setLoggedIn] = React.useState({
+    isLoggedIn: false,
+  });
+
   return (
-      <NavigationContainer>
-        <Stack.Navigator
+    <UserProvider>
+    <NavigationContainer>
+        {/*<Stack.Screen
             mode="card"
             initialRouteName="TabNavigator"
             screenOptions={{ headerShown: false }}
+        >*/}
+        <Stack.Navigator
+          mode="card"
+          initialRouteName="LoginScreen"
+          screenOptions={{ headerShown: false }}
         >
           <Stack.Screen name="LoginScreen" component={LoginScreen} />
-          <Stack.Screen
-              name="RegisterScreen"
-              component={RegisterScreen}
-              screenOptions={{ headerShown: true }}
-          />
           <Stack.Screen
               name="InformationManagementScreen"
               component={InformationManagementScreen}
@@ -53,11 +63,13 @@ const App = () => {
           <Stack.Screen
               name="UserManagementScreen"
               component={UserManagementScreen}
-              options={{ headerShown: true }}
+              options={{ headerShown: true, }}
           />
           <Stack.Screen name="TabNavigator" component={TabNavigator} />
-        </Stack.Navigator>
+    </Stack.Navigator>
       </NavigationContainer>
+      </UserProvider>
+
   );
 };
 

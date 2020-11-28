@@ -1,10 +1,10 @@
-export const  firebaseConfig = {
-    apiKey: "AIzaSyDfv4RgyT6B0nANKBBu7miga2az8pPdndw",
-    authDomain: "yanomasapp-9f9b1.firebaseapp.com",
-    databaseURL: "https://yanomasapp-9f9b1.firebaseio.com",
-    projectId: "yanomasapp-9f9b1",
-    storageBucket: "yanomasapp-9f9b1.appspot.com",
-    messagingSenderId: "587503203603",
-    appId: "1:587503203603:web:c74ad87514ca570a2c16e6",
-    measurementId: "G-MXWZC8QL5G"
-};
+export const firebaseConfig = {
+    apiKey: "AIzaSyC8SB7gAQVw-3c-cXOa1jskWEXVi6sTS0U",
+    authDomain: "yanomas-admin.firebaseapp.com",
+    databaseURL: "https://yanomas-admin.firebaseio.com",
+    projectId: "yanomas-admin",
+    storageBucket: "yanomas-admin.appspot.com",
+    messagingSenderId: "428852990818",
+    appId: "1:428852990818:web:a931459e353ba642c4123b",
+    measurementId: "G-0KJ7V59X09"
+  };

@@ -22,15 +22,15 @@ const TabNavigator = () => {
             screenOptions={({ route }) => ({
                 tabBarIcon: ({focused, color, size}) => {
                     let iconName = "account-multiple";
-                    if (route.name === "UserManagementScreen") {
+                    if (route.name === "Usuarios") {
                         iconName = focused ? "account-multiple" : "account-multiple";
-                    } else if (route.name === "MapManagementScreen") {
+                    } else if (route.name === "Alertas") {
                         iconName = focused ? "map" : "map";
-                    } else if (route.name === "CrimeReportScreen") {
+                    } else if (route.name === "Reportes") {
                         iconName = focused ? "fire" : "fire";
-                    } else if (route.name === "InformationManagementScreen") {
+                    } else if (route.name === "Información") {
                         iconName = focused ? "information-variant" : "information-variant";
-                    } else if (route.name === "SettingsScreen") {
+                    } else if (route.name === "Configuración") {
                         iconName = focused ? "settings" : "settings";
                     }
 
@@ -43,11 +43,11 @@ const TabNavigator = () => {
                 inactiveTintColor: "gray",
             }}
         >
-            <Tab.Screen name="UserManagementScreen" component={UserManagementScreen} />
-            <Tab.Screen name="MapManagementScreen" component={MapManagementScreen} />
-            <Tab.Screen name="CrimeReportScreen" component={CrimeReportScreen} />
-            <Tab.Screen name="InformationManagementScreen" component={InformationScreen} />
-            <Tab.Screen name="SettingsScreen" component={SettingsScreen} />
+            <Tab.Screen name="Usuarios" component={UserManagementScreen} />
+            <Tab.Screen name="Alertas" component={MapManagementScreen} />
+            <Tab.Screen name="Reportes" component={CrimeReportScreen} />
+            <Tab.Screen name="Información" component={InformationScreen} />
+            <Tab.Screen name="Configuración" component={SettingsScreen} />
         </Tab.Navigator>
     );
 };
