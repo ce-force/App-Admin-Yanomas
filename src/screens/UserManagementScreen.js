@@ -38,6 +38,7 @@ function UserManagementScreen({navigation}) {
     const Item = ({ title, email, profile, entryDate, totalActions, currentLocation, action })=> {
         return (
           <View style={styles.item}>
+            
             <View
               style={{
                 display: "flex",
@@ -45,43 +46,31 @@ function UserManagementScreen({navigation}) {
                 justifyContent: "space-between"
               }}
             >
+              
               <View
                 style={{
                   display: "flex",
                   flexDirection: "row"
                 }}
               >
+                                <View>
+                    <Button style={styles.blockButton} onPress={() => blockUser()}>Bloquear</Button>
+                </View>
                 <Image
-                  source={{ uri: profile }}
+                  source={{ uri: Images.ProfilePicture }}
                   style={{ height: 60, width: 60, borderRadius: 30, margin: 10 }}
                 />
                 <View>
                   <Text style={styles.title}>{title}</Text>
                   <Text style={styles.email}>{email}</Text>
-                  <Text
-                    style={{
-                      paddingLeft: 6,
-                      paddingTop: 4,
-                      color: "gray"
-                    }}
-                  >
-                    Fecha de Ingreso: {entryDate}
-                  </Text>
+
                   <Text
                     style={{
                       paddingLeft: 6,
                       color: "gray"
                     }}
                   >
-                    Acciones Realizadas: {totalActions}
-                  </Text>
-                  <Text
-                    style={{
-                      paddingLeft: 6,
-                      color: "gray"
-                    }}
-                  >
-                    Ubicación Promedio: {currentLocation}
+                    Ubicación - YaNoMás {currentLocation}
                   </Text>                    
 
                   {/*<View style={{paddingLeft:10,paddingTop:10, paddingBottom:10, backgroundColor:currentTeme.COLORS.BORDER}}>
@@ -90,9 +79,7 @@ function UserManagementScreen({navigation}) {
                     <Text>Ubicación: {action[2]}</Text>
                 </View>*/}
                 </View>
-                <View>
-                    <Button style={styles.blockButton} onPress={() => blockUser()}>Bloquear</Button>
-                </View>
+
               </View>
             </View>
           </View>
@@ -118,7 +105,6 @@ function UserManagementScreen({navigation}) {
 
       const showActions = (currentUser) => {
           //alert(currentUser);
-          navigation.navigate("AlertsList");
           
       }
 
@@ -151,7 +137,7 @@ function UserManagementScreen({navigation}) {
     return (
         <View style={styles.container}>
                   
-          <Title >Gestión de Usuarios</Title>
+          <Title style={styles.mainTitle}>Gestión de Usuarios</Title>
 
           <TextInput
           style={styles.textInputStyle}
@@ -184,43 +170,60 @@ function UserManagementScreen({navigation}) {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        backgroundColor: "white",
-        flex:1
-      },
-      container2:{
-        backgroundColor: "white",
-        top:0
-      },
-      itemStyle: {
-         padding: 10,
-      },
-      textInputStyle: {
-          height: 40,
-          borderWidth: 1,
-          paddingLeft: 20,
-          margin: 5,
-          borderColor: '#009688',
-          backgroundColor: '#FFFFFF',
-        },
-      item: {
-          height: 150,
-        },
-        title: {
-          fontSize: 25,
-          paddingLeft: 6,
-          paddingTop: 5,
-          shadowOpacity: 0
-        },
-        email:{
-          fontSize: 12,
-          paddingLeft: 6,
-        },
-      blockButton:{
-          width: 80,
-          height: 30,
-          backgroundColor: currentTeme.COLORS.DEFAULT
-      }
+  container: {
+    backgroundColor: "white",
+    flex:1
+  },
+  container2:{
+    backgroundColor: "white",
+  },
+  mainTitle:{
+    backgroundColor: currentTeme.COLORS.DEFAULT
+  },
+  itemStyle: {
+     padding: 10,
+  },
+  textInputStyle: {
+      height: 40,
+      borderWidth: 1,
+      paddingLeft: 20,
+      margin: 5,
+      borderColor: currentTeme.COLORS.PRIMARY,
+      backgroundColor: currentTeme.COLORS.WHITE,
+    },
+  item: {
+      height: 115,
+    },
+    title: {
+      fontSize: 25,
+      paddingLeft: 6,
+      paddingTop: 5,
+      shadowOpacity: 0,
+      color: currentTeme.COLORS.PRIMARY
+    },
+    email:{
+      fontSize: 12,
+      paddingLeft: 6,
+      color: currentTeme.COLORS.WARNING
+    },
+    entryDate:{
+      fontSize: 12,
+      paddingLeft: 6
+    },
+    action:{
+      paddingLeft: 6,
+      color: currentTeme.COLORS.WARNING
+    },
+  blockButton:{
+    height: 35,
+    width: 90,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+    elevation: 10,
+    top:15,
+    backgroundColor: currentTeme.COLORS.DEFAULT
+  }
 });
 
 export default UserManagementScreen;

@@ -51,6 +51,8 @@ export default function MapManagementScreen({navigation}) {
                   flexDirection: "row"
                 }}
               >
+                <Button style={styles.blockButton} onPress={() => deleteAlert({action})}>Eliminar</Button>
+
                 <View>
                   <Text style={styles.title}>{title.toUpperCase()}</Text>
                   <Text style={styles.action}>{action}</Text>
@@ -65,7 +67,6 @@ export default function MapManagementScreen({navigation}) {
                   >
                     Fecha: {entryDate}
                   </Text>
-                  <Button style={styles.blockButton} onPress={() => deleteAlert({action})}>Eliminar</Button>
 
                   {/*<View style={{paddingLeft:10,paddingTop:10, paddingBottom:10, backgroundColor:currentTeme.COLORS.BORDER}}>
                     <Text>Acción: {action[0]}</Text>
@@ -161,33 +162,41 @@ const styles = StyleSheet.create({
           borderWidth: 1,
           paddingLeft: 20,
           margin: 5,
-          borderColor: '#009688',
-          backgroundColor: '#FFFFFF',
+          borderColor: currentTeme.COLORS.PRIMARY,
+          backgroundColor: currentTeme.COLORS.WHITE,
         },
       item: {
-          height: 150,
+          height: 120,
         },
         title: {
           fontSize: 25,
           paddingLeft: 6,
           paddingTop: 5,
-          shadowOpacity: 0
+          shadowOpacity: 0,
+          color: currentTeme.COLORS.PRIMARY
         },
         email:{
           fontSize: 12,
-          paddingLeft: 6
+          paddingLeft: 6,
+          color: "grey"
         },
         entryDate:{
           fontSize: 12,
           paddingLeft: 6
         },
         action:{
-          paddingLeft: 6
+          paddingLeft: 6,
+          color: currentTeme.COLORS.WARNING
         },
-      blockButton:{
-          width: 80,
-          height: 30,
+        blockButton:{
+          height: 35,
+          width: 90,
+          justifyContent: 'center',
+          alignItems: 'center',
+          borderRadius: 10,
+          elevation: 10,
+          top:15,
           backgroundColor: currentTeme.COLORS.DEFAULT
-      }
+        }
 });
 

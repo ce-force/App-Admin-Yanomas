@@ -12,14 +12,12 @@ import InformationManagementScreen from "./src/screens/InformationManagementScre
 import CrimeReportScreen from "./src/screens/CrimeReportScreen";
 import MapManagementScreen from "./src/screens/MapManagementScreen";
 import UserManagementScreen from "./src/screens/UserManagementScreen";
-import AlertsList from './src/screens/utils/AlertsList';
 import { UserContext, UserProvider } from "./src/communication/UserContext";
 
 
 import * as firebase from "firebase";
 import { firebaseConfig } from "./src/config/FirebaseConfig";
 import TabNavigator from "./src/components/TabNavigator";
-import Login from "./src/screens/auth/LoginScreen";
 
 const Stack = createStackNavigator();
 
@@ -66,11 +64,6 @@ const App = () => {
               name="UserManagementScreen"
               component={UserManagementScreen}
               options={{ headerShown: true, }}
-          />
-          <Stack.Screen
-              name="AlertsList"
-              component={AlertsList}
-              options={{ headerShown: true, title: "Alertas de Usuarios" }}
           />
           <Stack.Screen name="TabNavigator" component={TabNavigator} />
     </Stack.Navigator>
