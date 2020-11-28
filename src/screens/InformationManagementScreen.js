@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {StyleSheet, View, ScrollView, TextInput, Platform, RefreshControl } from "react-native";
+import {StyleSheet, View, ScrollView, TextInput, Platform, RefreshControl, TouchableOpacity, Text} from "react-native";
 import currentTeme from "../constants/Theme";
 
 import { baseURL } from "../constants/utils";
@@ -8,6 +8,7 @@ import {Picker} from '@react-native-picker/picker';
 import {MessageItem} from "../components/MessageItem";
 import {LargeButton} from "../components/LargeButton";
 import * as ImagePicker from "expo-image-picker";
+import {MaterialCommunityIcons} from "@expo/vector-icons";
 
 
 
@@ -25,7 +26,6 @@ function InformationManagementScreen(){
         message: ''
     });
 
-
     const [category, setCategory] = useState({
         type: 'info',
     });
@@ -41,6 +41,7 @@ function InformationManagementScreen(){
     ];
 
 
+    // Obtains current title label for adding item
     const getTitle = () => {
         for(let i = 0; i < categories.length; i++){
             if(categories[i].type === category.type){
@@ -50,9 +51,10 @@ function InformationManagementScreen(){
                 })
             }
         }
-    }
+    };
 
 
+    // Obtains items to display on screen
     const getRequests = () => {
         setRefreshing(true);
         fetch(baseURL + '/informations')
@@ -66,12 +68,13 @@ function InformationManagementScreen(){
             });
     };
 
-
+    // First thing to load are the items
     useEffect(() => {
         getRequests();
     }, []);
 
 
+    // Image picking permission
     useEffect(() => {
         (async () => {
             if (Platform.OS !== 'web') {
@@ -83,6 +86,7 @@ function InformationManagementScreen(){
         })();
     }, []);
 
+    // Select image from gallery
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -101,6 +105,7 @@ function InformationManagementScreen(){
     };
 
 
+    // Captures change on input for adding/editing item
     const textInputChange = (val) => {
         if( val.trim().length <= 300 ) {
             setData({
@@ -110,14 +115,18 @@ function InformationManagementScreen(){
         }
     };
 
+    // Picker value change
     function handleChange(value) {
         setCategory({type: value})
     }
 
+    // Displays new item form
     function newItem() {
         setAddItem({isAddingItem: true})
     }
 
+
+    // POST mmethod for adding new item
     function submitNewItem() {
         setAddItem({isAddingItem: false});
         return fetch(baseURL + '/informations', {
@@ -134,70 +143,93 @@ function InformationManagementScreen(){
             },
         })
             .then((response) => response.json())
-            .then((json) => alert(JSON.stringify(json)));
     };
 
 
+    // Cancels adding item
     function cancelAdd() {
         setAddItem({isAddingItem: false});
     }
 
+
     return (
         <View style={styles.container}>
-            <Picker
-                selectedValue={category.type}
-                onValueChange={value => handleChange(value)}
-                mode="dropdown"
-                style={styles.picker}
-                itemStyle={{ color:'red', fontWeight:'900', fontSize: 18, padding:30}}>
-                {categories.map(item => <Picker.Item key={item.id} label={item.label} value={item.type}/>)}
-            </Picker>
-            {AddItem.isAddingItem === false ? (
-            <LargeButton title="Agregar"
-                         onPress={() => { getTitle(), newItem()}}
-                         width={200}> </LargeButton>
-                ): <View/>}
-
-            <View>
-                {AddItem.isAddingItem === true ? (
-                    <View>
-
-                        <TextInput
-                            placeholder="Descripción"
-                            style={[styles.textInput, {
-                                color: 'black'
-                            }]}
-                            autoCapitalize="none"
-                            onChangeText={(val) => textInputChange(val)}
-                        />
-                        <LargeButton width={200} title="Seleccionar imagen" onPress={() => pickImage()}> </LargeButton>
-                        <LargeButton width={100} title="Confirmar" onPress={() => submitNewItem()}> </LargeButton>
-                        <LargeButton width={100} title="Cancelar" onPress={() => cancelAdd()}> </LargeButton>
-                    </View>
-                    ) :
-                    (
-            <ScrollView style={{ marginBottom: 150}}
-                        refreshControl={
-                            <RefreshControl refreshing={refreshing} onRefresh={() => getRequests()} />
-                        }
+            <ScrollView refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={() => getRequests()} />
+            }
             >
-                {customData.length !== 0 ? (
-                customData.map(element => { return category.type === element.type ? (
-                        <MessageItem key={element._id}
-                                     title={element.title}
-                                     image={element.image}
-                                     message={element.message}
-                                     _id={element._id}
-                                     updateHandler={getRequests} />)
-                    : (<View key={element._id}/>)})
-                    )
-                    :
-                    (<View/>)}
+                <View style={{ flex: 1, justifyContent: 'space-around', flexDirection: 'row'}}>
+                    <Picker
+                        selectedValue={category.type}
+                        onValueChange={value => handleChange(value)}
+                        mode="dropdown"
+                        style={styles.picker}
+                        itemStyle={{ backgroundColor: "grey", color: "blue", fontSize:17 }}>
+                        {categories.map(item => <Picker.Item key={item.id} label={item.label} value={item.type}/>)}
+                    </Picker>
+                    {AddItem.isAddingItem === false ? (
+                        <View style={[styles.signIn, {backgroundColor:currentTeme.COLORS.ACTIVE, width: '25%'}]}>
+                            <TouchableOpacity
+                                onPress={() => { getTitle(), newItem() }}>
+                                <Text style={styles.textSign}>Agregar</Text>
+                            </TouchableOpacity>
+                        </View>
+                        ): <View/>}
+
+                </View>
+                    <View>
+                        {AddItem.isAddingItem === true ? (
+                            <View style={{marginTop: '50%'}}>
+                                <Text style={{fontSize: 20}}>Descripción</Text>
+                                <TextInput
+                                    placeholder="info..."
+                                    underlineColorAndroid={currentTeme.COLORS.ACTIVE}
+                                    style={styles.textInputText}
+                                    onChangeText={(val) => textInputChange(val)}
+                                />
+                                <View style={styles.imageBtn}>
+                                    <TouchableOpacity onPress={() => { pickImage()}}>
+                                        <View  style={{ flex: 1, flexDirection: 'row' }}>
+                                        <MaterialCommunityIcons name="image" color="white" size={20} style={{marginTop:6}}/>
+                                        <Text style={styles.textSign}>Seleccionar Imagen</Text></View>
+                                    </TouchableOpacity>
+                                </View>
+                                <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
+                                    <View style={[styles.signIn, {backgroundColor:currentTeme.COLORS.SUCCESS, width: '45%'}]}>
+                                        <TouchableOpacity onPress={() => { submitNewItem()}}>
+                                            <View  style={{ flex: 1, flexDirection: 'row' }}>
+                                                <MaterialCommunityIcons name="image" color="white" size={20} style={{marginTop:6}}/>
+                                                <Text style={styles.textSign}>Confirmar</Text></View>
+                                        </TouchableOpacity>
+                                    </View>
+                                    <View style={[styles.signIn, {backgroundColor:currentTeme.COLORS.ERROR, width: '45%'}]}>
+                                        <TouchableOpacity onPress={() => { cancelAdd()}}>
+                                            <View  style={{ flex: 1, flexDirection: 'row' }}>
+                                                <Text style={styles.textSign}>Cancelar</Text></View>
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
+                            </View>
+                            ) :
+                            (<View>
+                        {customData.length !== 0 ? (
+                        customData.map(element => { return category.type === element.type ? (
+                                <MessageItem key={element._id}
+                                             title={element.title}
+                                             image={element.image}
+                                             message={element.message}
+                                             _id={element._id}
+                                             updateHandler={getRequests} />)
+                            : (<View key={element._id}/>)})
+                            )
+                            :
+                            (<View/>)}
+
+                    </View>
+                    )}
+                    </View>
 
             </ScrollView>
-            )}
-            </View>
-
         </View>
     );
 }
@@ -220,10 +252,11 @@ const styles = StyleSheet.create({
         paddingLeft: 10
     },
     picker: {
-        width: 260,
-        fontSize:10,
+        width: 250,
+        fontSize:20,
         borderRadius: 10,
-        marginTop: 200
+        marginTop: '10%',
+        color: currentTeme.COLORS.DEFAULT
     },
     textInput: {
         marginTop: 10,
@@ -231,6 +264,40 @@ const styles = StyleSheet.create({
         color: currentTeme.COLORS.ACTIVE,
         fontSize: 20
     },
+    button: {
+        alignItems: 'center',
+        marginTop: 10,
+        marginBottom: 10
+    },
+    signIn: {
+        height: 35,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 10,
+        elevation: 10,
+        marginTop: '12%',
+        backgroundColor: currentTeme.COLORS.DEFAULT
+    },
+    imageBtn: {
+        height: 35,
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 10,
+        elevation: 10,
+        backgroundColor: currentTeme.COLORS.INFO,
+        marginTop: '5%'
+    },
+    textSign: {
+        fontSize: 15,
+        color: 'white',
+        marginTop: 3
+    },
+    textInputText: {
+        fontSize: 15,
+        color: 'black',
+        height: 50
+    }
 });
 
 export default InformationManagementScreen;
