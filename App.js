@@ -7,7 +7,6 @@ import {
 } from "@react-navigation/stack";
 
 // Screens
-import RegisterScreen from "./src/screens/auth/RegisterScreen";
 import LoginScreen from "./src/screens/auth/LoginScreen";
 import InformationManagementScreen from "./src/screens/InformationManagementScreen";
 import CrimeReportScreen from "./src/screens/CrimeReportScreen";

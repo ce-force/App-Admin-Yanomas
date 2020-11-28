@@ -17,6 +17,7 @@ import Map from "../components/Map";
 import InfoArea from "../components/InfoArea";
 import IconButton from "../components/IconButton";
 import InputArea from "../components/InputArea";
+import { FlatList } from "react-native-gesture-handler";
 
 const ALERTS = [
   {

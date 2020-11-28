@@ -135,7 +135,7 @@ function UserManagementScreen({navigation}) {
 
       const blockUser = () => {
         {/*firebase.auth().updateUser(uid, {
-          disaled: true
+          disabled: true
         })  
         .then((userRecord) => {
           console.log('Successfully updated user', userRecord.toJSON());
@@ -168,7 +168,7 @@ function UserManagementScreen({navigation}) {
           underlineColorAndroid="transparent"
           placeholder="Filtrar por Usuario"
         />*/}
-          
+                  
           <Title >Gestión de Usuarios</Title>
 
            <SafeAreaView style={styles.container2}>
@@ -187,7 +187,6 @@ function UserManagementScreen({navigation}) {
                 )}
                 keyExtractor={item => item.id}
             />
-            
             </SafeAreaView>
         </View>
     );

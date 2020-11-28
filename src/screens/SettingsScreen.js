@@ -25,11 +25,12 @@ function SettingsScreen({ navigation }) {
 
     const UNIVERSALSETTINGSDATA = [
 
-        {
+        {/*
             id: "yanomas-v1.0.0-settings-privacy",
             title: "Privacidad y Seguridad",
             icon: "key",
-        },
+        */},
+        
         {
             id: "yanomas-v1.0.0-settings-support",
             title: "Soporte",
@@ -107,7 +108,8 @@ function SettingsScreen({ navigation }) {
                 navigation.navigate("AccountScreen");
                 break;
             case "key":
-                navigation.navigate("AccountScreen");
+                //navigation.navigate("AccountScreen");
+                showToast("PRIVACIDAD Y SEGURIDAD");
                 break;
             case "information":
                 showToast("PÁGINA DE SOPORTE");

@@ -43,7 +43,6 @@ const LoginScreen = ({ navigation }) => {
         navigation.navigate("TabNavigator");
       } else {
         navigation.navigate("LoginScreen");
-        console.log("nada");
       }
     });
   };
